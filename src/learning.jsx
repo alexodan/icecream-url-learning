@@ -1,10 +1,10 @@
 import { Pill } from "./inputs/Pills";
 import { RangeInput } from "./inputs/RangeInput";
+import { TextInput } from "./inputs/TextInput";
 
 export const formConfig = {
   range: {
-    /* TODO: setFormValues: function (formValues) {} */
-    display: function (value) {
+    display: function ({ value }) {
       if (!value) return "";
       const { min, max } = value;
       return <Pill value={`${min} - ${max}`} />;
@@ -12,31 +12,24 @@ export const formConfig = {
     component: (props) => <RangeInput {...props} />,
   },
   number: {
-    display: function (value) {
+    display: function ({ value }) {
       if (!value) return "";
       return Number(value);
     },
-    component: (props) => (
-      <TextInput
-        path={props.path}
-        name={props.name}
-        label={props.label}
-        handleAdd={props.handleAdd}
-        formValues={props.formValues}
-      />
-    ),
+    component: (props) => <TextInput {...props} />,
   },
   boolean: {
-    display: function (value = false) {
+    display: function ({ value = false }) {
       return value ? "Yes" : "No";
     },
     component: function () {},
   },
   array: {
-    display: function (values, key, formFields) {
-      return values.map((val) => {
-        // TODO: only works one level deep?
-        return <ul>{formConfig[formFields[key].fields.type].display(val)}</ul>;
+    display: function ({ value }) {
+      return value.map((val) => {
+        // TODO: this would only work one level deep
+        // return <ul>{formConfig[formFields[key].fields.type].display(val)}</ul>;
+        return null;
       });
     },
     component: function () {},
@@ -51,6 +44,11 @@ export const formFields = {
   //     type: "range",
   //   },
   // },
+  total_attendees: {
+    type: "range",
+    label: "Total attendees",
+    displayType: "array",
+  },
   age: {
     type: "number",
     label: "Age",
@@ -93,18 +91,18 @@ export const formFields = {
 //   });
 // }
 
-export function renderField(values, filterName) {
-  const filterValues = values[filterName];
-  console.log("filterName:::", filterName);
-  return formConfig[formFields[filterName].type].component(
-    {
-      path: filterName,
-      name: filterName,
-      label: formFields[filterName].label,
-      handleAdd: null,
-    }
-    // filterValues,
-    // filterName,
-    // formFields
-  );
+export function renderInputField({ name, label, path, handleAdd, formValues }) {
+  console.log("filterName:::", name, formFields[name].type);
+  return formConfig[formFields[name].type].component({
+    name,
+    label,
+    path,
+    handleAdd,
+  });
+}
+
+export function renderPills({ name, value }) {
+  return formConfig[formFields[name].type].display({
+    value,
+  });
 }

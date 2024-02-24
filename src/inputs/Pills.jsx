@@ -8,7 +8,7 @@ export function Pills({ filterName, values = [] }) {
         <Pill
           key={i}
           // value={formConfig[formFields[filterName].type].display(filterValue)}
-          value={""}
+          value={filterValue}
         />
       ))}
     </ul>
@@ -16,5 +16,6 @@ export function Pills({ filterName, values = [] }) {
 }
 
 export function Pill({ value }) {
+  console.log("pill value:", value);
   return <li className="pill">{value}</li>;
 }

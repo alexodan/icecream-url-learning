@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Pills } from "./Pills";
 
 // TODO: TextInput gets the path? shame shame i know your name(?)
-export function TextInput({ path, name, label, handleAdd, formValues }) {
+export function TextInput({ path, name, label, handleAdd }) {
   const [value, setValue] = useState("");
 
   const handleChange = (e) => {
@@ -19,9 +18,6 @@ export function TextInput({ path, name, label, handleAdd, formValues }) {
       <label>{label}</label>
       <input name={name} type="text" value={value} onChange={handleChange} />
       <button onClick={add}>+</button>
-      <div className="container">
-        <Pills filterName={name} values={formValues[name]} />
-      </div>
     </div>
   );
 }

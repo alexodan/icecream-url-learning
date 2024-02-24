@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Pills } from "./Pills";
 
-export function RangeInput({ name, label, handleAdd, formValues }) {
+export function RangeInput({ name, label, handleAdd }) {
   const [value, setValue] = useState({ min: "", max: "" });
 
   const handleChange = (e) => {
@@ -23,9 +22,6 @@ export function RangeInput({ name, label, handleAdd, formValues }) {
       <input type="text" name="min" value={value.min} onChange={handleChange} />
       <input type="text" name="max" value={value.max} onChange={handleChange} />
       <button onClick={add}>+</button>
-      <div className="container">
-        <Pills filterName={name} values={formValues[name]} />
-      </div>
     </div>
   );
 }

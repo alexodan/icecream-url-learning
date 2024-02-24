@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { formConfig, formFields, renderField } from "./learning";
-import { RangeInput } from "./inputs/RangeInput";
-import "./Form2.css";
+import { formFields, renderInputField, renderPills } from "./learning";
 import { get as _get, set as _set } from "lodash";
-import { TextInput } from "./inputs/TextInput";
+import "./Form2.css";
+import { Pills } from "./inputs/Pills";
 
 export function Form2() {
   const filters = [
@@ -51,60 +50,34 @@ export function Form2() {
         <h2>Filters</h2>
         <ul>
           {Object.keys(formFields).map((fieldKey) => {
-            return (
-              <li key={fieldKey}>
-                {formFields[fieldKey].label}:
-                {renderField({
-                  path: fieldKey,
-                  name: fieldKey,
-                  label: formFields[fieldKey].label,
-                  handleAdd: handleAdd,
-                })}
-              </li>
-            );
+            return <li key={fieldKey}>{formFields[fieldKey].label}:</li>;
           })}
         </ul>
       </div>
       <form className="form" onSubmit={handleSubmit}>
-        <div>
-          {Object.keys(formFields).map((key) => {
-            if (
-              formFields[key].visibleCondition &&
-              !formFields[key].visibleCondition(formValues)
-            ) {
-              return null;
-            }
-            return <p>{key}</p>;
-          })}
-        </div>
-        <TextInput
-          // inputs are hardcoded
-          path="occurrence.year"
-          name="year"
-          label="Year"
-          handleAdd={handleAdd}
-          formValues={formValues}
-        />
-        <TextInput
-          path="occurrence.relative_date"
-          name="relative_date"
-          label="Relative date"
-          handleAdd={handleAdd}
-          formValues={formValues}
-        />
-
-        <RangeInput
-          name="total_attendees"
-          label="Total attendees"
-          handleAdd={handleAdd}
-          formValues={formValues}
-        />
-        <RangeInput
-          name="square_footage"
-          label="Square footage"
-          handleAdd={handleAdd}
-          formValues={formValues}
-        />
+        {Object.keys(formFields).map((key) => {
+          if (
+            formFields[key].visibleCondition &&
+            !formFields[key].visibleCondition(formValues)
+          ) {
+            return null;
+          }
+          return (
+            <div key={key} className="form-group">
+              {renderInputField({
+                name: key,
+                label: formFields[key].label,
+                path: key,
+                handleAdd: handleAdd,
+                formValues,
+              })}
+              {renderPills({
+                name: key,
+                value: formValues[key]?.[0],
+              })}
+            </div>
+          );
+        })}
       </form>
       <pre>{JSON.stringify(formValues, null, 2)}</pre>
     </div>
