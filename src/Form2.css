@@ -1,0 +1,17 @@
+.container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+}
+
+.sidebar {
+  padding: 20px;
+  border-right: 1px solid #ccc;
+}
+
+.form {
+  padding: 20px;
+}
+
+.container {
+  margin-top: 10px;
+}

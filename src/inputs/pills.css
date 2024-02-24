@@ -1,0 +1,18 @@
+/* PILL */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.pill {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #0d79a7;
+  color: white;
+  border-radius: 20px;
+  padding: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
