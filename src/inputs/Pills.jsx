@@ -1,21 +1,15 @@
-import { formConfig, formFields } from "../learning";
 import "./pills.css";
 
-export function Pills({ filterName, values = [] }) {
+export function Pills({ values = [] }) {
   return (
     <ul className="pills">
       {values.map((filterValue, i) => (
-        <Pill
-          key={i}
-          // value={formConfig[formFields[filterName].type].display(filterValue)}
-          value={filterValue}
-        />
+        <Pill key={i} value={filterValue} />
       ))}
     </ul>
   );
 }
 
 export function Pill({ value }) {
-  console.log("pill value:", value);
-  return <li className="pill">{value}</li>;
+  return <li className="pill">{JSON.stringify(value, null, 2)}</li>;
 }

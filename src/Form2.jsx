@@ -38,7 +38,10 @@ export function Form2() {
 
   const handleAdd = (path, value) => {
     // TODO: check if path is an array, object, or otherwise
-    const newValues = _set(formValues, path, [value]);
+    const newValues = _set(formValues, path, [
+      ..._get(formValues, path),
+      value,
+    ]);
     setFormValues({
       ...newValues,
     });
@@ -48,9 +51,17 @@ export function Form2() {
     <div className="container">
       <div className="sidebar">
         <h2>Filters</h2>
-        <ul>
+        <ul className="sidebar-filters">
           {Object.keys(formFields).map((fieldKey) => {
-            return <li key={fieldKey}>{formFields[fieldKey].label}:</li>;
+            if (!formValues[fieldKey] || formValues[fieldKey].length === 0) {
+              return null;
+            }
+            return (
+              <li key={fieldKey}>
+                {formFields[fieldKey].label}:
+                <Pills values={formValues[fieldKey]} />
+              </li>
+            );
           })}
         </ul>
       </div>
@@ -71,10 +82,12 @@ export function Form2() {
                 handleAdd: handleAdd,
                 formValues,
               })}
-              {renderPills({
-                name: key,
-                value: formValues[key]?.[0],
-              })}
+              <div className="pills-container">
+                {renderPills({
+                  name: key,
+                  value: formValues[key],
+                })}
+              </div>
             </div>
           );
         })}

@@ -4,95 +4,82 @@ import { TextInput } from "./inputs/TextInput";
 
 export const formConfig = {
   range: {
-    display: function ({ value }) {
-      if (!value) return "";
+    display: function ({ value, id }) {
       const { min, max } = value;
-      return <Pill value={`${min} - ${max}`} />;
+      return <Pill key={id} value={`${min} - ${max}`} />;
     },
     component: (props) => <RangeInput {...props} />,
   },
   number: {
-    display: function ({ value }) {
-      if (!value) return "";
-      return Number(value);
+    display: function ({ value, id }) {
+      const { min, max } = value;
+      return <Pill key={id} value={Number(value)} />;
     },
     component: (props) => <TextInput {...props} />,
   },
   boolean: {
-    display: function ({ value = false }) {
-      return value ? "Yes" : "No";
-    },
-    component: function () {},
-  },
-  array: {
-    display: function ({ value }) {
-      return value.map((val) => {
-        // TODO: this would only work one level deep
-        // return <ul>{formConfig[formFields[key].fields.type].display(val)}</ul>;
-        return null;
-      });
+    display: function ({ value, id }) {
+      const { min, max } = value;
+      return <Pill key={id} value={value ? "Yes" : "No"} />;
     },
     component: function () {},
   },
 };
 
 export const formFields = {
-  // total_attendees: {
-  //   type: "array",
-  //   label: "Total attendees",
-  //   fields: {
-  //     type: "range",
-  //   },
-  // },
   total_attendees: {
+    displayType: "multiple",
     type: "range",
     label: "Total attendees",
-    displayType: "array",
   },
-  age: {
+  square_footage: {
+    displayType: "multiple",
+    label: "Square footage",
+    type: "range",
+  },
+  year: {
+    displayType: "multiple",
     type: "number",
-    label: "Age",
+    label: "Year",
   },
-  // square_footage: {
-  //   type: "array",
-  //   label: "Square footage",
-  //   fields: {
-  //     type: "range",
-  //   },
-  // },
-  // year: {
-  //   type: "number",
-  //   label: "Year",
-  // },
-  // month: {
-  //   type: "number",
-  //   label: "Month",
-  //   visibleCondition: (formValues) => {
-  //     return false;
-  //   },
-  // },
-  // day: {
-  //   type: "number",
-  //   label: "Day",
-  // },
+  month: {
+    displayType: "multiple",
+    type: "number",
+    label: "Month",
+    visibleCondition: (formValues) => {
+      return false;
+    },
+  },
+  day: {
+    displayType: "multiple",
+    type: "number",
+    label: "Day",
+  },
   // date_range: {
+  // displayType: "single",
   //   type: "range",
   //   label: "Date range",
   // },
   // relative_date: {
+  // displayType: "single",
   //   type: "number",
   //   label: "Relative date",
   // },
 };
 
-// export function renderField(fields, values) {
-//   return Object.entries(values).map(([key, value]) => {
-//     return formConfig[fields[key].type].display(value, key, formFields);
-//   });
-// }
+export const displayConfig = {
+  multiple: function (displayFn, values) {
+    // TODO: change to use Pills component
+    return values.map((val, i) => {
+      return <div key={i}>{displayFn({ value: val })}</div>;
+    });
+  },
+  single: function (displayFn, value) {
+    return displayFn({ value });
+  },
+};
 
-export function renderInputField({ name, label, path, handleAdd, formValues }) {
-  console.log("filterName:::", name, formFields[name].type);
+export function renderInputField({ name, label, path, handleAdd }) {
   return formConfig[formFields[name].type].component({
     name,
     label,
@@ -102,7 +89,10 @@ export function renderInputField({ name, label, path, handleAdd, formValues }) {
 }
 
 export function renderPills({ name, value }) {
-  return formConfig[formFields[name].type].display({
-    value,
-  });
+  const formFieldType = formFields[name].type;
+  const displayFn = formConfig[formFieldType].display;
+  if (!value) {
+    return null;
+  }
+  return displayConfig[formFields[name].displayType](displayFn, value);
 }
